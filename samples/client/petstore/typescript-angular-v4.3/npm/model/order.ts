@@ -11,31 +11,22 @@
  */
 
 
-
 /**
  * An order for a pets from the pet store
  */
 export interface Order {
     id?: number;
-
     petId?: number;
-
     quantity?: number;
-
     shipDate?: Date;
-
     /**
      * Order Status
      */
     status?: Order.StatusEnum;
-
     complete?: boolean;
-
 }
 export namespace Order {
-    export enum StatusEnum {
-        Placed = <any> 'placed',
-        Approved = <any> 'approved',
-        Delivered = <any> 'delivered'
-    }
+    export type StatusEnum = 'placed' | 'approved' | 'delivered';
 }
+
+
