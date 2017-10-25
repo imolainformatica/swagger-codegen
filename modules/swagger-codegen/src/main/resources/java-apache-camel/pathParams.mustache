@@ -1,0 +1,1 @@
+{{#isPathParam}}            .param().name("{{paramName}}").type(RestParamType.path).required({{#required}}Boolean.TRUE{{/required}}{{^required}}Boolean.FALSE{{/required}}).description("{{{description}}}").endParam(){{/isPathParam}}

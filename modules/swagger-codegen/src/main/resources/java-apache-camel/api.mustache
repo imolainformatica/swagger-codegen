@@ -1,0 +1,32 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.rest.RestBindingMode;
+import org.apache.camel.model.rest.RestDefinition;
+import org.apache.camel.model.rest.RestParamType;
+import java.util.List;
+import java.util.Map;
+
+
+public abstract class {{classname}} extends ApiConfiguration {
+
+    protected RestDefinition {{baseName}};
+
+    public {{classname}}() {
+        this.{{baseName}} = rest("/{{{baseName}}}").description("the {{{baseName}}} API");
+    }
+
+    {{#operations}}{{#operation}}
+    public RouteDefinition {{nickname}}() {
+        return this.{{baseName}}.{{httpMethod}}({{#subresourceOperation}}"{{{path}}}"{{/subresourceOperation}})
+            {{#vendorExtensions.x-tags}}.tag("{{tag}}"){{/vendorExtensions.x-tags}}.description("{{{summary}}}")
+            {{>consumes}}{{>produces}}
+{{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{/allParams}}
+{{>responses}}
+            {{#useBeanValidation}}.route().process(new {{classname}}Validator("{{nickname}}"));{{/useBeanValidation}}{{^useBeanValidation}}.route();{{/useBeanValidation}}
+    }
+    {{/operation}}{{/operations}}
+
+}

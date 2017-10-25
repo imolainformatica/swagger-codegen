@@ -1,0 +1,2 @@
+{{#allParams}}{{^isBodyParam}}        private {{#required}} @NotNull{{/required}}{{>beanValidationCore}} {{{dataType}}} {{nickname}}{{paramName}};
+{{/isBodyParam}}{{/allParams}}

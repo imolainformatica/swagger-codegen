@@ -1,0 +1,16 @@
+package {{package}};
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class {{classname}}RouteBuilder extends {{classname}} {
+
+    @Override
+    public void configure() throws Exception {
+        super.restConfigurationDefinition();
+
+        {{#operations}}{{#operation}}
+        super.{{nickname}}().log("{{nickname}} API").to("mock:{{nickname}}");
+        {{/operation}}{{/operations}}
+    }
+}

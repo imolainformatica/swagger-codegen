@@ -1,0 +1,130 @@
+package io.swagger.codegen.languages;
+
+import io.swagger.codegen.*;
+import io.swagger.codegen.languages.features.BeanValidationFeatures;
+import io.swagger.models.Operation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements CodegenConfig {
+
+    static Logger LOGGER = LoggerFactory.getLogger(JavaApacheCamelServerCodegen.class);
+
+    protected boolean useBeanValidation = Boolean.TRUE;
+    public static final String GENERATE_POM = "generatePom";
+
+    private boolean generatePom = false;
+
+    public CodegenType getTag() {
+        return CodegenType.SERVER;
+    }
+
+    public String getName() {
+        return "java-apache-camel";
+    }
+
+    public String getHelp() {
+        return "Generates a java-apache-camel server.";
+    }
+
+    public JavaApacheCamelServerCodegen() {
+        super();
+
+        outputFolder = "generated-code" + File.separator + "java-apache-camel";
+        modelTemplateFiles.put("model.mustache", ".java");
+        apiTemplateFiles.put("api.mustache", ".java");
+        if(useBeanValidation) {
+            apiTemplateFiles.put("apiValidator.mustache", "Validator.java");
+        }
+        if (generatePom) {
+            apiTemplateFiles.put("apiRouteBuilder.mustache", "RouteBuilder.java");
+        }
+
+        embeddedTemplateDir = templateDir = "java-apache-camel";
+        apiPackage = "io.swagger.api";
+        modelPackage = "io.swagger.model";
+        invokerPackage = "io.swagger";
+
+        dateLibrary = "legacy";
+
+        apiTestTemplateFiles.clear();
+        modelTestTemplateFiles.clear();
+        modelDocTemplateFiles.remove("model_doc.mustache");
+        apiDocTemplateFiles.remove("api_doc.mustache");
+
+        additionalProperties.put("jackson", "true");
+
+
+        cliOptions.add(CliOption.newBoolean(GENERATE_POM, "Whether to generate pom.xml if the file does not already exist.").defaultValue(String.valueOf(generatePom)));
+        cliOptions.add(CliOption.newBoolean(BeanValidationFeatures.USE_BEANVALIDATION, "Use BeanValidation API annotations"));
+
+
+    }
+
+    @Override
+    public void addOperationToGroup(String tag, String resourcePath, Operation operation, CodegenOperation co, Map<String, List<CodegenOperation>> operations) {
+        co.httpMethod = co.httpMethod.toLowerCase();
+        String basePath = resourcePath;
+        if (basePath.startsWith("/")) {
+            basePath = basePath.substring(1);
+        }
+        int pos = basePath.indexOf("/");
+        if (pos > 0) {
+            basePath = basePath.substring(0, pos);
+        }
+        if (basePath == "") {
+            basePath = "default";
+        } else {
+            if (co.path.startsWith("/" + basePath)) {
+                co.path = co.path.substring(("/" + basePath).length());
+            }
+            co.subresourceOperation = !co.path.isEmpty();
+        }
+        List<CodegenOperation> opList = operations.get(basePath);
+        if (opList == null) {
+            opList = new ArrayList<CodegenOperation>();
+            operations.put(basePath, opList);
+        }
+        opList.add(co);
+        co.baseName = basePath;
+    }
+
+    @Override
+    public void processOpts() {
+        super.processOpts();
+        if (useBeanValidation) {
+            writePropertyBack(BeanValidationFeatures.USE_BEANVALIDATION, useBeanValidation);
+        }
+        if (additionalProperties.containsKey(GENERATE_POM)) {
+            generatePom = Boolean.valueOf(additionalProperties.get(GENERATE_POM).toString());
+        }
+
+        if (generatePom) {
+            writeOptional(outputFolder, new SupportingFile("pom.mustache", "", "pom.xml"));
+            writeOptional((sourceFolder + '/' + invokerPackage).replace(".", "/"),
+                    new SupportingFile("application.mustache",
+                            (sourceFolder + '/' + invokerPackage).replace(".", "/"),
+                            "Application.java"));
+            writeOptional(projectFolder + "/resources/static",
+                    new SupportingFile("index.mustache",
+                            projectFolder + "/resources/static",
+                            "index.html"));
+
+        }
+    }
+
+    @Override
+    public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
+        SupportingFile apiConfig = new SupportingFile("apiConfiguration.mustache",
+                (sourceFolder + '/' + apiPackage).replace(".", "/"),
+                "ApiConfiguration.java");
+        writeOptional((sourceFolder + '/' + apiPackage).replace(".", "/"), apiConfig);
+        return super.postProcessOperations(objs);
+    }
+}
