@@ -39,17 +39,17 @@ public class UserApiRouteBuilder extends UserApi {
         super.loginUser().log("get loginUser API")
         
         .log("username: ${header.username}")
-        
+                
         .log("password: ${header.password}")
         .to("mock:loginUser");
         
         super.logoutUser().log("get logoutUser API")
-        .to("mock:logoutUser");
+.to("mock:logoutUser");
         
         super.updateUser().log("put updateUser API")
         
         .log("username: ${header.username}")
-        .log("body: " + bodyAs(User.class).toString())
+                .log("body: " + bodyAs(User.class).toString())
         
         .to("mock:updateUser");
         

@@ -5,7 +5,7 @@
                     new {{classname}}Constraint<{{{baseType}}}>().checkConstraint(validator.validate({{paramName}}Item));
                 }
             }
-            {{/isContainer}}{{/isBodyParam}}{{^isBodyParam}}            {{{dataType}}} {{paramName}} = in.getHeader("{{paramName}}", {{#isContainer}}List{{/isContainer}}{{^isContainer}}{{{dataType}}}{{/isContainer}}.class);
+            {{/isContainer}}{{/isBodyParam}}{{^isBodyParam}}            {{{dataType}}} {{paramName}} = in.getHeader("{{baseName}}", {{#isContainer}}List{{/isContainer}}{{^isContainer}}{{{dataType}}}{{/isContainer}}.class);
             new {{classname}}Constraint<{{classname}}ValidationRequest>().checkConstraint(validator.validateValue({{classname}}ValidationRequest.class, "{{nickname}}{{paramName}}", {{paramName}}));{{#isContainer}}
             if ({{paramName}} != null) {
                 for ({{{baseType}}} {{paramName}}Item : {{paramName}}) {

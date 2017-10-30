@@ -39,7 +39,7 @@ public class PetApiValidator implements Processor {
         if (this.operation.equals("deletePet")) {
             Long petId = in.getHeader("petId", Long.class);
             new PetApiConstraint<PetApiValidationRequest>().checkConstraint(validator.validateValue(PetApiValidationRequest.class, "deletePetpetId", petId));
-            String apiKey = in.getHeader("apiKey", String.class);
+            String apiKey = in.getHeader("api_key", String.class);
             new PetApiConstraint<PetApiValidationRequest>().checkConstraint(validator.validateValue(PetApiValidationRequest.class, "deletePetapiKey", apiKey));
 
         }

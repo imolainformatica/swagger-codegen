@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements
     protected boolean useBeanValidation = Boolean.TRUE;
     public static final String GENERATE_POM = "generatePom";
 
-    private boolean generatePom = false;
+    private boolean generatePom = Boolean.FALSE;
 
     public CodegenType getTag() {
         return CodegenType.SERVER;
@@ -96,8 +95,10 @@ public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements
     @Override
     public List<CodegenSecurity> fromSecurity(Map<String, SecuritySchemeDefinition> schemes) {
         List<String> schemesList = new ArrayList<>();
-        for (String scheme : schemes.keySet()) {
-            schemesList.add(scheme);
+        if (schemes != null) {
+            for (String scheme : schemes.keySet()) {
+                schemesList.add(scheme);
+            }
         }
         if (schemesList.isEmpty()) {
             schemesList.add(HTTP);
@@ -105,6 +106,7 @@ public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements
         additionalProperties.put("schemes", schemesList);
         return super.fromSecurity(schemes);
     }
+
     @Override
     public void processOpts() {
         super.processOpts();

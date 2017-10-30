@@ -15,7 +15,7 @@ public class {{classname}}RouteBuilder extends {{classname}} {
         super.{{nickname}}().log("{{httpMethod}} {{nickname}} API")
         {{#allParams}}
         {{#isBodyParam}}.log("{{paramName}}: " + bodyAs({{baseType}}{{#isContainer}}[]{{/isContainer}}.class).toString()){{/isBodyParam}}
-        {{^isBodyParam}}.log("{{paramName}}: ${header.{{paramName}}}"){{/isBodyParam}}
+        {{^isBodyParam}}.log("{{paramName}}: ${header.{{baseName}}}"){{/isBodyParam}}
         {{/allParams}}.to("mock:{{nickname}}");
         {{/operation}}{{/operations}}
     }

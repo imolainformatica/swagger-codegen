@@ -17,7 +17,7 @@ public class StoreApiRouteBuilder extends StoreApi {
         .to("mock:deleteOrder");
         
         super.getInventory().log("get getInventory API")
-        .to("mock:getInventory");
+.to("mock:getInventory");
         
         super.getOrderById().log("get getOrderById API")
         
