@@ -10,6 +10,9 @@ public abstract class ApiConfiguration extends RouteBuilder {
     public RestConfigurationDefinition restConfigurationDefinition() {
         return restConfigurationDefinition == null ? restConfigurationDefinition = restConfiguration()
             .component("servlet")
+            .host("petstore.swagger.io")
+            .port("80")
+            .scheme("https")
             .contextPath("/v2")
             .bindingMode(RestBindingMode.auto)
             .apiContextPath("/api-doc")

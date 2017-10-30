@@ -1,2 +1,1 @@
-{{#isHeaderParam}}            .param().name("{{paramName}}").type(RestParamType.header).required({{#required}}Boolean.TRUE{{/required}}{{^required}}Boolean.FALSE{{/required}}).defaultValue("{{{defaultValue}}}").dataType("{{{dataType}}}").description("{{{description}}}").endParam()
-{{/isHeaderParam}}
+{{#isHeaderParam}}            .param().name("{{paramName}}").type(RestParamType.header).required({{#required}}Boolean.TRUE{{/required}}{{^required}}Boolean.FALSE{{/required}}).defaultValue("{{{defaultValue}}}").description("{{{description}}}").endParam(){{/isHeaderParam}}

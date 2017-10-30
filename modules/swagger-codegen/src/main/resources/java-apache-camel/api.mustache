@@ -22,10 +22,13 @@ public abstract class {{classname}} extends ApiConfiguration {
     public RouteDefinition {{nickname}}() {
         return this.{{baseName}}.{{httpMethod}}({{#subresourceOperation}}"{{{path}}}"{{/subresourceOperation}})
             {{#vendorExtensions.x-tags}}.tag("{{tag}}"){{/vendorExtensions.x-tags}}.description("{{{summary}}}")
-            {{>consumes}}{{>produces}}
-{{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{/allParams}}
+    {{>consumes}}{{>produces}}
+    {{#bodyParams}}{{#-first}}.type({{baseType}}{{#isContainer}}[]{{/isContainer}}.class){{/-first}}{{/bodyParams}}
+    {{#returnType}}.outType({{^returnContainer}}{{returnType}}{{/returnContainer}}{{#returnContainer}}{{returnBaseType}}[]{{/returnContainer}}.class){{/returnType}}
+{{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}
+{{/allParams}}
 {{>responses}}
-            {{#useBeanValidation}}.route().process(new {{classname}}Validator("{{nickname}}"));{{/useBeanValidation}}{{^useBeanValidation}}.route();{{/useBeanValidation}}
+            {{#useBeanValidation}}.route().routeId("{{nickname}}").process(new {{classname}}Validator("{{nickname}}"));{{/useBeanValidation}}{{^useBeanValidation}}.route().routeId("{{nickname}}");{{/useBeanValidation}}
     }
     {{/operation}}{{/operations}}
 

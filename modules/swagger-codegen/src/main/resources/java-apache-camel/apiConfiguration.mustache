@@ -10,6 +10,8 @@ public abstract class ApiConfiguration extends RouteBuilder {
     public RestConfigurationDefinition restConfigurationDefinition() {
         return restConfigurationDefinition == null ? restConfigurationDefinition = restConfiguration()
             .component("servlet")
+            .host("{{serverHost}}")
+            .port("{{serverPort}}")
             .contextPath("{{contextPath}}")
             .bindingMode(RestBindingMode.auto)
             .apiContextPath("/api-doc")

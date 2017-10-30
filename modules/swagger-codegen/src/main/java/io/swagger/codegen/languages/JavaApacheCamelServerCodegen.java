@@ -3,6 +3,7 @@ package io.swagger.codegen.languages;
 import io.swagger.codegen.*;
 import io.swagger.codegen.languages.features.BeanValidationFeatures;
 import io.swagger.models.Operation;
+import io.swagger.models.Swagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,8 @@ import java.util.Map;
 public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements CodegenConfig {
 
     static Logger LOGGER = LoggerFactory.getLogger(JavaApacheCamelServerCodegen.class);
-
+    protected static final String DEFAULT_HOST = "127.0.0.1";
+    protected static final String DEFAULT_PORT = "80";
     protected boolean useBeanValidation = Boolean.TRUE;
     public static final String GENERATE_POM = "generatePom";
 
@@ -39,12 +41,6 @@ public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements
         outputFolder = "generated-code" + File.separator + "java-apache-camel";
         modelTemplateFiles.put("model.mustache", ".java");
         apiTemplateFiles.put("api.mustache", ".java");
-        if(useBeanValidation) {
-            apiTemplateFiles.put("apiValidator.mustache", "Validator.java");
-        }
-        if (generatePom) {
-            apiTemplateFiles.put("apiRouteBuilder.mustache", "RouteBuilder.java");
-        }
 
         embeddedTemplateDir = templateDir = "java-apache-camel";
         apiPackage = "io.swagger.api";
@@ -99,6 +95,7 @@ public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements
     public void processOpts() {
         super.processOpts();
         if (useBeanValidation) {
+            apiTemplateFiles.put("apiValidator.mustache", "Validator.java");
             writePropertyBack(BeanValidationFeatures.USE_BEANVALIDATION, useBeanValidation);
         }
         if (additionalProperties.containsKey(GENERATE_POM)) {
@@ -106,6 +103,7 @@ public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements
         }
 
         if (generatePom) {
+            apiTemplateFiles.put("apiRouteBuilder.mustache", "RouteBuilder.java");
             writeOptional(outputFolder, new SupportingFile("pom.mustache", "", "pom.xml"));
             writeOptional((sourceFolder + '/' + invokerPackage).replace(".", "/"),
                     new SupportingFile("application.mustache",
@@ -126,5 +124,22 @@ public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements
                 "ApiConfiguration.java");
         writeOptional((sourceFolder + '/' + apiPackage).replace(".", "/"), apiConfig);
         return super.postProcessOperations(objs);
+    }
+
+    @Override
+    public void preprocessSwagger(Swagger swagger) {
+        super.preprocessSwagger(swagger);
+        String host = swagger.getHost() != null ? swagger.getHost() : DEFAULT_HOST;
+        String port = DEFAULT_PORT;
+        if (host != null) {
+            String[] parts = host.split(":");
+            if (parts.length > 1) {
+                host = parts[0];
+                port = parts[1];
+            }
+        }
+
+        this.additionalProperties.put("serverPort", port);
+        this.additionalProperties.put("serverHost", host);
     }
 }
