@@ -12,11 +12,11 @@ public abstract class ApiConfiguration extends RouteBuilder {
             .component("servlet")
             .host("petstore.swagger.io")
             .port("80")
-            .scheme("https")
             .contextPath("/v2")
             .bindingMode(RestBindingMode.auto)
             .apiContextPath("/api-doc")
             .apiProperty("api.title", "")
+            .apiProperty("schemes", "http")
             .apiProperty("api.description", "")
             .apiProperty("api.version", "1.0.0") : restConfigurationDefinition;
     }

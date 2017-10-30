@@ -16,6 +16,7 @@ public abstract class ApiConfiguration extends RouteBuilder {
             .bindingMode(RestBindingMode.auto)
             .apiContextPath("/api-doc")
             .apiProperty("api.title", "{{{title}}}")
+            .apiProperty("schemes", "{{#schemes}}{{scheme}}{{^-last}},{{/-last}}{{/schemes}}")
             .apiProperty("api.description", "{{description}}")
             .apiProperty("api.version", "{{version}}") : restConfigurationDefinition;
     }

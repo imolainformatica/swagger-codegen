@@ -4,6 +4,7 @@ import io.swagger.codegen.*;
 import io.swagger.codegen.languages.features.BeanValidationFeatures;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
+import io.swagger.models.auth.SecuritySchemeDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.util.Map;
 public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements CodegenConfig {
 
     static Logger LOGGER = LoggerFactory.getLogger(JavaApacheCamelServerCodegen.class);
+    protected static final String HTTP = "http";
     protected static final String DEFAULT_HOST = "127.0.0.1";
     protected static final String DEFAULT_PORT = "80";
     protected boolean useBeanValidation = Boolean.TRUE;
@@ -92,8 +94,21 @@ public class JavaApacheCamelServerCodegen extends AbstractJavaCodegen implements
     }
 
     @Override
+    public List<CodegenSecurity> fromSecurity(Map<String, SecuritySchemeDefinition> schemes) {
+        List<String> schemesList = new ArrayList<>();
+        for (String scheme : schemes.keySet()) {
+            schemesList.add(scheme);
+        }
+        if (schemesList.isEmpty()) {
+            schemesList.add(HTTP);
+        }
+        additionalProperties.put("schemes", schemesList);
+        return super.fromSecurity(schemes);
+    }
+    @Override
     public void processOpts() {
         super.processOpts();
+
         if (useBeanValidation) {
             apiTemplateFiles.put("apiValidator.mustache", "Validator.java");
             writePropertyBack(BeanValidationFeatures.USE_BEANVALIDATION, useBeanValidation);
