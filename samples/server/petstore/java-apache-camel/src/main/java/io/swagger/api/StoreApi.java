@@ -21,7 +21,7 @@ public abstract class StoreApi extends ApiConfiguration {
     public RouteDefinition deleteOrder() {
         return this.store.delete("/order/{orderId}")
             .description("Delete purchase order by ID")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     
             .param().name("orderId").type(RestParamType.path).required(Boolean.TRUE).description("ID of the order that needs to be deleted").endParam()
@@ -45,7 +45,7 @@ public abstract class StoreApi extends ApiConfiguration {
     public RouteDefinition getOrderById() {
         return this.store.get("/order/{orderId}")
             .description("Find purchase order by ID")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     .outType(Order.class)
             .param().name("orderId").type(RestParamType.path).required(Boolean.TRUE).description("ID of pet that needs to be fetched").endParam()
@@ -59,7 +59,7 @@ public abstract class StoreApi extends ApiConfiguration {
     public RouteDefinition placeOrder() {
         return this.store.post("/order")
             .description("Place an order for a pet")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     .type(Order.class)
     .outType(Order.class)
             .param().name("body").type(RestParamType.body).description("order placed for purchasing the pet").endParam()

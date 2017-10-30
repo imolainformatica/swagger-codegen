@@ -1,6 +1,8 @@
 package {{package}};
 
 import org.springframework.stereotype.Component;
+{{#imports}}import {{import}};
+{{/imports}}
 
 @Component
 public class {{classname}}RouteBuilder extends {{classname}} {
@@ -10,7 +12,11 @@ public class {{classname}}RouteBuilder extends {{classname}} {
         super.restConfigurationDefinition();
 
         {{#operations}}{{#operation}}
-        super.{{nickname}}().log("{{nickname}} API").to("mock:{{nickname}}");
+        super.{{nickname}}().log("{{httpMethod}} {{nickname}} API")
+        {{#allParams}}
+        {{#isBodyParam}}.log("{{paramName}}: " + bodyAs({{baseType}}{{#isContainer}}[]{{/isContainer}}.class).toString()){{/isBodyParam}}
+        {{^isBodyParam}}.log("{{paramName}}: ${header.{{paramName}}}"){{/isBodyParam}}
+        {{/allParams}}.to("mock:{{nickname}}");
         {{/operation}}{{/operations}}
     }
 }

@@ -1,6 +1,12 @@
 package io.swagger.api;
 
+import com.sun.org.apache.xpath.internal.operations.String;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
+import java.io.File;
+import io.swagger.model.ModelApiResponse;
+import io.swagger.model.Pet;
 
 @Component
 public class PetApiRouteBuilder extends PetApi {
@@ -10,21 +16,60 @@ public class PetApiRouteBuilder extends PetApi {
         super.restConfigurationDefinition();
 
         
-        super.addPet().log("addPet API").to("mock:addPet");
+        super.addPet().log("post addPet API")
+        .log("body: " + bodyAs(Pet.class).toString())
+        .process(new Processor() {
+            @Override
+            public void process(Exchange exchange) throws Exception {
+                exchange.getOut().setBody("");
+            }
+        })
+        .to("mock:addPet");
         
-        super.deletePet().log("deletePet API").to("mock:deletePet");
+        super.deletePet().log("delete deletePet API")
         
-        super.findPetsByStatus().log("findPetsByStatus API").to("mock:findPetsByStatus");
+        .log("petId: ${header.petId}")
         
-        super.findPetsByTags().log("findPetsByTags API").to("mock:findPetsByTags");
+        .log("apiKey: ${header.apiKey}")
+        .to("mock:deletePet");
         
-        super.getPetById().log("getPetById API").to("mock:getPetById");
+        super.findPetsByStatus().log("get findPetsByStatus API")
         
-        super.updatePet().log("updatePet API").to("mock:updatePet");
+        .log("status: ${header.status}")
+        .to("mock:findPetsByStatus");
         
-        super.updatePetWithForm().log("updatePetWithForm API").to("mock:updatePetWithForm");
+        super.findPetsByTags().log("get findPetsByTags API")
         
-        super.uploadFile().log("uploadFile API").to("mock:uploadFile");
+        .log("tags: ${header.tags}")
+        .to("mock:findPetsByTags");
+        
+        super.getPetById().log("get getPetById API")
+        
+        .log("petId: ${header.petId}")
+        .to("mock:getPetById");
+        
+        super.updatePet().log("put updatePet API")
+        .log("body: " + bodyAs(Pet.class).toString())
+        
+        .to("mock:updatePet");
+        
+        super.updatePetWithForm().log("post updatePetWithForm API")
+        
+        .log("petId: ${header.petId}")
+        
+        .log("name: ${header.name}")
+        
+        .log("status: ${header.status}")
+        .to("mock:updatePetWithForm");
+        
+        super.uploadFile().log("post uploadFile API")
+        
+        .log("petId: ${header.petId}")
+        
+        .log("additionalMetadata: ${header.additionalMetadata}")
+        
+        .log("file: ${header.file}")
+        .to("mock:uploadFile");
         
     }
 }

@@ -1,1 +1,1 @@
-{{#hasConsumes}}{{#consumes}}.consumes("{{{mediaType}}}"){{/consumes}}{{/hasConsumes}}
+{{#hasConsumes}}.consumes("{{#consumes}}{{{mediaType}}}{{^-last}},{{/-last}}{{/consumes}}"){{/hasConsumes}}

@@ -1,6 +1,7 @@
 package io.swagger.api;
 
 import org.springframework.stereotype.Component;
+import io.swagger.model.Order;
 
 @Component
 public class StoreApiRouteBuilder extends StoreApi {
@@ -10,13 +11,23 @@ public class StoreApiRouteBuilder extends StoreApi {
         super.restConfigurationDefinition();
 
         
-        super.deleteOrder().log("deleteOrder API").to("mock:deleteOrder");
+        super.deleteOrder().log("delete deleteOrder API")
         
-        super.getInventory().log("getInventory API").to("mock:getInventory");
+        .log("orderId: ${header.orderId}")
+        .to("mock:deleteOrder");
         
-        super.getOrderById().log("getOrderById API").to("mock:getOrderById");
+        super.getInventory().log("get getInventory API")
+        .to("mock:getInventory");
         
-        super.placeOrder().log("placeOrder API").to("mock:placeOrder");
+        super.getOrderById().log("get getOrderById API")
+        
+        .log("orderId: ${header.orderId}")
+        .to("mock:getOrderById");
+        
+        super.placeOrder().log("post placeOrder API")
+        .log("body: " + bodyAs(Order.class).toString())
+        
+        .to("mock:placeOrder");
         
     }
 }

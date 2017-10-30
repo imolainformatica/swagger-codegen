@@ -1,6 +1,7 @@
 package io.swagger.api;
 
 import org.springframework.stereotype.Component;
+import io.swagger.model.User;
 
 @Component
 public class UserApiRouteBuilder extends UserApi {
@@ -10,21 +11,47 @@ public class UserApiRouteBuilder extends UserApi {
         super.restConfigurationDefinition();
 
         
-        super.createUser().log("createUser API").to("mock:createUser");
+        super.createUser().log("post createUser API")
+        .log("body: " + bodyAs(User.class).toString())
         
-        super.createUsersWithArrayInput().log("createUsersWithArrayInput API").to("mock:createUsersWithArrayInput");
+        .to("mock:createUser");
         
-        super.createUsersWithListInput().log("createUsersWithListInput API").to("mock:createUsersWithListInput");
+        super.createUsersWithArrayInput().log("post createUsersWithArrayInput API")
+        .log("body: " + bodyAs(User[].class).toString())
         
-        super.deleteUser().log("deleteUser API").to("mock:deleteUser");
+        .to("mock:createUsersWithArrayInput");
         
-        super.getUserByName().log("getUserByName API").to("mock:getUserByName");
+        super.createUsersWithListInput().log("post createUsersWithListInput API")
+        .log("body: " + bodyAs(User[].class).toString())
         
-        super.loginUser().log("loginUser API").to("mock:loginUser");
+        .to("mock:createUsersWithListInput");
         
-        super.logoutUser().log("logoutUser API").to("mock:logoutUser");
+        super.deleteUser().log("delete deleteUser API")
         
-        super.updateUser().log("updateUser API").to("mock:updateUser");
+        .log("username: ${header.username}")
+        .to("mock:deleteUser");
+        
+        super.getUserByName().log("get getUserByName API")
+        
+        .log("username: ${header.username}")
+        .to("mock:getUserByName");
+        
+        super.loginUser().log("get loginUser API")
+        
+        .log("username: ${header.username}")
+        
+        .log("password: ${header.password}")
+        .to("mock:loginUser");
+        
+        super.logoutUser().log("get logoutUser API")
+        .to("mock:logoutUser");
+        
+        super.updateUser().log("put updateUser API")
+        
+        .log("username: ${header.username}")
+        .log("body: " + bodyAs(User.class).toString())
+        
+        .to("mock:updateUser");
         
     }
 }

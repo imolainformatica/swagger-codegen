@@ -1,1 +1,1 @@
-{{#hasProduces}}{{#produces}}.produces("{{{mediaType}}}"){{/produces}}{{/hasProduces}}
+{{#hasProduces}}.produces("{{#produces}}{{{mediaType}}}{{^-last}},{{/-last}}{{/produces}}"){{/hasProduces}}

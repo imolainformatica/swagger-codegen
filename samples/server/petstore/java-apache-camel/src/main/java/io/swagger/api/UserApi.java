@@ -21,7 +21,7 @@ public abstract class UserApi extends ApiConfiguration {
     public RouteDefinition createUser() {
         return this.user.post()
             .description("Create user")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     .type(User.class)
     
             .param().name("body").type(RestParamType.body).description("Created user object").endParam()
@@ -33,7 +33,7 @@ public abstract class UserApi extends ApiConfiguration {
     public RouteDefinition createUsersWithArrayInput() {
         return this.user.post("/createWithArray")
             .description("Creates list of users with given input array")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     .type(User[].class)
     
             .param().name("body").type(RestParamType.body).description("List of user object").endParam()
@@ -45,7 +45,7 @@ public abstract class UserApi extends ApiConfiguration {
     public RouteDefinition createUsersWithListInput() {
         return this.user.post("/createWithList")
             .description("Creates list of users with given input array")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     .type(User[].class)
     
             .param().name("body").type(RestParamType.body).description("List of user object").endParam()
@@ -57,7 +57,7 @@ public abstract class UserApi extends ApiConfiguration {
     public RouteDefinition deleteUser() {
         return this.user.delete("/{username}")
             .description("Delete user")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     
             .param().name("username").type(RestParamType.path).required(Boolean.TRUE).description("The name that needs to be deleted").endParam()
@@ -70,7 +70,7 @@ public abstract class UserApi extends ApiConfiguration {
     public RouteDefinition getUserByName() {
         return this.user.get("/{username}")
             .description("Get user by user name")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     .outType(User.class)
             .param().name("username").type(RestParamType.path).required(Boolean.TRUE).description("The name that needs to be fetched. Use user1 for testing. ").endParam()
@@ -84,7 +84,7 @@ public abstract class UserApi extends ApiConfiguration {
     public RouteDefinition loginUser() {
         return this.user.get("/login")
             .description("Logs user into the system")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     .outType(String.class)
             .param().name("username").type(RestParamType.query).required(Boolean.TRUE).defaultValue("").description("The user name for login").endParam()
@@ -98,7 +98,7 @@ public abstract class UserApi extends ApiConfiguration {
     public RouteDefinition logoutUser() {
         return this.user.get("/logout")
             .description("Logs out current logged in user session")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     
             .responseMessage().code(0).message("successful operation").endResponseMessage()
@@ -109,7 +109,7 @@ public abstract class UserApi extends ApiConfiguration {
     public RouteDefinition updateUser() {
         return this.user.put("/{username}")
             .description("Updated user")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     .type(User.class)
     
             .param().name("username").type(RestParamType.path).required(Boolean.TRUE).description("name that need to be deleted").endParam()

@@ -23,7 +23,7 @@ public abstract class PetApi extends ApiConfiguration {
     public RouteDefinition addPet() {
         return this.pet.post()
             .description("Add a new pet to the store")
-    .consumes("application/json").consumes("application/xml").produces("application/xml").produces("application/json")
+    .consumes("application/json,application/xml").produces("application/xml,application/json")
     .type(Pet.class)
     
             .param().name("body").type(RestParamType.body).description("Pet object that needs to be added to the store").endParam()
@@ -35,7 +35,7 @@ public abstract class PetApi extends ApiConfiguration {
     public RouteDefinition deletePet() {
         return this.pet.delete("/{petId}")
             .description("Deletes a pet")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     
             .param().name("petId").type(RestParamType.path).required(Boolean.TRUE).description("Pet id to delete").endParam()
@@ -48,7 +48,7 @@ public abstract class PetApi extends ApiConfiguration {
     public RouteDefinition findPetsByStatus() {
         return this.pet.get("/findByStatus")
             .description("Finds Pets by status")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     .outType(Pet[].class)
             .param().name("status").type(RestParamType.query).required(Boolean.TRUE).defaultValue("").description("Status values that need to be considered for filter").endParam()
@@ -61,7 +61,7 @@ public abstract class PetApi extends ApiConfiguration {
     public RouteDefinition findPetsByTags() {
         return this.pet.get("/findByTags")
             .description("Finds Pets by tags")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     .outType(Pet[].class)
             .param().name("tags").type(RestParamType.query).required(Boolean.TRUE).defaultValue("").description("Tags to filter by").endParam()
@@ -74,7 +74,7 @@ public abstract class PetApi extends ApiConfiguration {
     public RouteDefinition getPetById() {
         return this.pet.get("/{petId}")
             .description("Find pet by ID")
-    .produces("application/xml").produces("application/json")
+    .produces("application/xml,application/json")
     
     .outType(Pet.class)
             .param().name("petId").type(RestParamType.path).required(Boolean.TRUE).description("ID of pet to return").endParam()
@@ -88,7 +88,7 @@ public abstract class PetApi extends ApiConfiguration {
     public RouteDefinition updatePet() {
         return this.pet.put()
             .description("Update an existing pet")
-    .consumes("application/json").consumes("application/xml").produces("application/xml").produces("application/json")
+    .consumes("application/json,application/xml").produces("application/xml,application/json")
     .type(Pet.class)
     
             .param().name("body").type(RestParamType.body).description("Pet object that needs to be added to the store").endParam()
@@ -102,7 +102,7 @@ public abstract class PetApi extends ApiConfiguration {
     public RouteDefinition updatePetWithForm() {
         return this.pet.post("/{petId}")
             .description("Updates a pet in the store with form data")
-    .consumes("application/x-www-form-urlencoded").produces("application/xml").produces("application/json")
+    .consumes("application/x-www-form-urlencoded").produces("application/xml,application/json")
     
     
             .param().name("petId").type(RestParamType.path).required(Boolean.TRUE).description("ID of pet that needs to be updated").endParam()
